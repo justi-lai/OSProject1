@@ -26,4 +26,5 @@ if __name__ == '__main__':
         sys.exit(1)
     
     LOG_FILE = sys.argv[1]
+    write(LOG_FILE, 'START', 'Logging Started.')
     process_log(LOG_FILE)
