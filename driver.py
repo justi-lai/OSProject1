@@ -57,6 +57,8 @@ def password(process, passwords):
             password = passwords[int(command)]
         elif command == '3' or command == 'BACK':
             return
+        else:
+            print('Please submit a valid input.\n')
         
     
     process.stdin.write('PASSKEY\n')
