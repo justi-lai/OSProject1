@@ -1,5 +1,4 @@
 import subprocess
-import os
 import sys
 
 def startProcesses(logFile):
@@ -19,8 +18,10 @@ def startProcesses(logFile):
     )
     return loggerProcess, encryptionProcess
 
-def logMessage(process, message):
-    process.stdin.write(message + '\n')
+def logMessage(process, action, message=''):
+    process.stdin.write(action + '\n')
+    if message != '':
+        process.stdin.write(message + '\n')
     process.stdin.flush()
 
 def menu():
@@ -31,11 +32,36 @@ def menu():
     print('4. HISTORY')
     print('5. QUIT')
 
+def password():
+    # temp
+
+def encrypt():
+
+
+def decrypt():
+
+
+def history():
+
+
 def main(logFile):
     logger, encryption = startProcesses(logFile)
-    lout, lerr = logger.communicate()
-    eout, eerr = encryption.communicate()
-    print(lout, eout)
+    
+    command = input().strip()
+    while command is not '5':
+        menu()
+        if command == 1:
+            password()
+        elif command == 2:
+            encrypt()
+        elif command == 3:
+            decrypt()
+        else:
+            history()
+    
+    logMessage(logger, 'QUIT')
+    
+
 
 if __name__ == '__main__':
     print('running')
