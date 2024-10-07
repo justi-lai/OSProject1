@@ -51,16 +51,17 @@ def password(process, passwords):
             command = input().rstrip()
             password = passwords[int(command)]
     
-    process.stdin.write(password)
+    process.stdin.write('PASSKEY\n')
+    process.stdin.write(password + '\n')
     process.stdin.flush()
 
-def encrypt():
+# def encrypt():
 
 
-def decrypt():
+# def decrypt():
 
 
-def history():
+# def history():
 
 
 def main(logFile):
@@ -73,12 +74,12 @@ def main(logFile):
         menu()
         if command == '1' or command == 'PASSWORD':
             password(passwords)
-        elif command == '2' or command == 'ENCRYPT':
-            encrypt()
-        elif command == '3' or command == 'DECRYPT':
-            decrypt()
-        elif command == '4' or command == 'HISTORY':
-            history()
+        # elif command == '2' or command == 'ENCRYPT':
+        #     encrypt()
+        # elif command == '3' or command == 'DECRYPT':
+        #     decrypt()
+        # elif command == '4' or command == 'HISTORY':
+        #     history()
         else:
             print('ERROR: Unknown input. Please try again.')
         command = input().strip().upper()
