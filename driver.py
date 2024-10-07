@@ -63,8 +63,7 @@ def password(process, passwords):
         else:
             print('Please submit a valid input.\n')
         
-    process.stdin.write('PASSKEY\n')
-    process.stdin.write(password + '\n')
+    process.stdin.write(f'PASSKEY {password}\n')
     process.stdin.flush()
 
 # def encrypt():
@@ -78,6 +77,13 @@ def password(process, passwords):
 
 def main(logFile):
     logger, encryption = startProcesses(logFile)
+
+    print(encryption.pid)
+
+    encryption.stdin.write('this is a test')
+    encryption.stdin.flush()
+    print(encryption.stdout.readline())
+
 
     passwords = []
 

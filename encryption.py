@@ -12,10 +12,10 @@ def main():
 
         if action == 'PASSKEY':
             passkey = message
-        elif action == 'ENCRYPT':
-            #body
-        elif action == 'DECRYPT':
-            #body
+        # elif action == 'ENCRYPT':
+        #     body
+        # elif action == 'DECRYPT':
+        #     body
         else:
             print('Error: Invalid Input')
 
@@ -23,5 +23,6 @@ if __name__ == '__main__':
     if len(sys.argv != 1):
         print('ERROR: incorrect usage of encryption')
         sys.exit(1)
-    
+    print('running)')
+    print(sys.stdin.readline())
     main()
