@@ -52,15 +52,17 @@ def password(process, passwords):
                 return
             print('Choose a password:')
             for i in range(1, len(passwords)+1):
-                print(i + '. ' + passwords[i])
+                print(f'{i}. {passwords[i-1]}')
             command = input('INPUT: ').rstrip()
-            password = passwords[int(command)]
+            try:
+                password = passwords[int(command)-1]
+            except:
+                print('Please input a valid number.\n')
         elif command == '3' or command == 'BACK':
             return
         else:
             print('Please submit a valid input.\n')
         
-    
     process.stdin.write('PASSKEY\n')
     process.stdin.write(password + '\n')
     process.stdin.flush()
