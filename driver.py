@@ -4,28 +4,33 @@ import sys
 
 def startProcesses(logFile):
     loggerProcess = subprocess.Popen(
-        ['python3', './logger.py', logFile],
+        ['py', './logger.py', logFile],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True
     )
     encryptionProcess = subprocess.Popen(
-        ['python3', './encryption.py'],
+        ['py', './encryption.py'],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True
     )
-    # loutput, lerrors = loggerProcess.communicate()
-    # eoutput, eerrors = encryptionProcess.communicate()
-    # print(loutput)
-    # print(eoutput)
+    return loggerProcess, encryptionProcess
+
+def logMessage(process, message):
+    process.stdin.write(message + '\n')
+
 
 def main(logFile):
-    startProcesses(logFile)
+    logger, encryption = startProcesses(logFile)
+    lout, lerr = logger.communicate()
+    eout, eerr = encryption.communicate()
+    print(lout, eout)
 
-if __name__ == 'main':
+if __name__ == '__main__':
+    print('running')
     if len(sys.argv) != 2:
         print("Usage: python3 driver.py <log_file>")
         sys.exit(1)
