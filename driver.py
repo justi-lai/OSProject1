@@ -39,17 +39,25 @@ def password(process, passwords):
     print('2. HISTORY')
     print('3. BACK')
 
-    command = input().rstrip().upper()
-    while command != '3' and command != 'BACK':
-        if command == 1 or command == 'NEW' or command == 'NEW PASSWORD':
+    password = ''
+    while True:
+        command = input('INPUT: ').rstrip().upper()
+        if command == '1' or command == 'NEW' or command == 'NEW PASSWORD':
             password = input('NEW PASSWORD: ')
             passwords.append(password)
+            break
         elif command == '2' or command == 'HISTORY':
+            if len(passwords) == 0:
+                print('No available passwords.')
+                return
             print('Choose a password:')
             for i in range(1, len(passwords)+1):
                 print(i + '. ' + passwords[i])
-            command = input().rstrip()
+            command = input('INPUT: ').rstrip()
             password = passwords[int(command)]
+        elif command == '3' or command == 'BACK':
+            return
+        
     
     process.stdin.write('PASSKEY\n')
     process.stdin.write(password + '\n')
@@ -68,12 +76,12 @@ def main(logFile):
     logger, encryption = startProcesses(logFile)
 
     passwords = []
-    
-    command = input().strip().upper()
+
+    menu()
+    command = input('INPUT: ').strip().upper()
     while command != '5' and command != 'QUIT':
-        menu()
         if command == '1' or command == 'PASSWORD':
-            password(passwords)
+            password(encryption, passwords)
         # elif command == '2' or command == 'ENCRYPT':
         #     encrypt()
         # elif command == '3' or command == 'DECRYPT':
@@ -82,6 +90,7 @@ def main(logFile):
         #     history()
         else:
             print('ERROR: Unknown input. Please try again.')
+        menu()
         command = input().strip().upper()
     
     logMessage(logger, 'QUIT')
