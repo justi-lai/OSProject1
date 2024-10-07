@@ -21,7 +21,15 @@ def startProcesses(logFile):
 
 def logMessage(process, message):
     process.stdin.write(message + '\n')
+    process.stdin.flush()
 
+def menu():
+    print('\nMenu')
+    print('1. PASSWORD')
+    print('2. ENCRYPT')
+    print('3. DECRYPT')
+    print('4. HISTORY')
+    print('5. QUIT')
 
 def main(logFile):
     logger, encryption = startProcesses(logFile)
