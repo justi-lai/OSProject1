@@ -1,5 +1,9 @@
 import sys
 
+def output(message=''):
+    result = f'RESULT {message}'
+    print(result)
+
 def main():
     passkey = ''
     while True:
@@ -12,6 +16,7 @@ def main():
 
         if action == 'PASSKEY':
             passkey = message
+            output()
         # elif action == 'ENCRYPT':
         #     body
         # elif action == 'DECRYPT':
@@ -23,6 +28,6 @@ if __name__ == '__main__':
     if len(sys.argv) != 1:
         print('ERROR: incorrect usage of encryption')
         sys.exit(1)
-    print('encryption running')
-    print(sys.stdin.readline())
+    #print('encryption running')
+    #print(sys.stdin.readline())
     main()
