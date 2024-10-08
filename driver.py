@@ -39,12 +39,14 @@ def password(process, passwords):
     print('2. HISTORY')
     print('3. BACK')
 
-    password = ''
+    word = ''
     while True:
         command = input('INPUT: ').rstrip().upper()
         if command == '1' or command == 'NEW' or command == 'NEW PASSWORD':
-            password = input('NEW PASSWORD: ')
-            passwords.append(password)
+            word = input('NEW PASSWORD: ')
+            print('point1')
+            passwords.append(word)
+            print(passwords)
             break
         elif command == '2' or command == 'HISTORY':
             if len(passwords) == 0:
@@ -55,15 +57,17 @@ def password(process, passwords):
                 print(f'{i}. {passwords[i-1]}')
             command = input('INPUT: ').rstrip()
             try:
-                password = passwords[int(command)-1]
+                word = passwords[int(command)-1]
             except:
                 print('Please input a valid number.\n')
         elif command == '3' or command == 'BACK':
             return
         else:
             print('Please submit a valid input.\n')
-        
-    process.stdin.write(f'PASSKEY {password}\n')
+    #f'PASSKEY {word}\n'
+    print('before')
+    process.stdin.write('test lmao')
+    print('after')
     process.stdin.flush()
 
 # def encrypt():
@@ -82,7 +86,7 @@ def main(logFile):
 
     encryption.stdin.write('this is a test')
     encryption.stdin.flush()
-    print(encryption.stdout.readline())
+    #print(encryption.stdout.readline())
 
 
     passwords = []

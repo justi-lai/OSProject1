@@ -20,9 +20,9 @@ def main():
             print('Error: Invalid Input')
 
 if __name__ == '__main__':
-    if len(sys.argv != 1):
+    if len(sys.argv) != 1:
         print('ERROR: incorrect usage of encryption')
         sys.exit(1)
-    print('running)')
+    print('encryption running')
     print(sys.stdin.readline())
     main()

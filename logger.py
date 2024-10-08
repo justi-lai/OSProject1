@@ -23,7 +23,7 @@ if __name__ == '__main__':
     if len(sys.argv) != 2:
         print('ERROR: incorrect usage | Usage: py logger.py <log_file>')
         sys.exit(1)
-    print('test')
+    print('logger running')
     LOG_FILE = sys.argv[1]
     write(LOG_FILE, 'START', 'Logging Started.')
     process_log(LOG_FILE)
