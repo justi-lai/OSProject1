@@ -1,8 +1,12 @@
 import sys
 
-def output(message=''):
-    result = f'RESULT {message}'
-    print(result)
+def output(action='RESULT', message=''):
+    if message != '':
+        result = f'{action} {message}'
+        print(result)
+    else:
+        print(action)
+    sys.stdout.flush()
 
 def main():
     passkey = ''
@@ -16,7 +20,9 @@ def main():
 
         if action == 'PASSKEY':
             passkey = message
+            print('e test')
             output()
+            print('encryption test')
         # elif action == 'ENCRYPT':
         #     body
         # elif action == 'DECRYPT':
@@ -28,6 +34,6 @@ if __name__ == '__main__':
     if len(sys.argv) != 1:
         print('ERROR: incorrect usage of encryption')
         sys.exit(1)
-    #print('encryption running')
+    print('encryption running')
     #print(sys.stdin.readline())
     main()

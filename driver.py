@@ -12,7 +12,7 @@ def startProcesses(logFile):
     encryptionProcess = subprocess.Popen(
         ['py', './encryption.py'],
         stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
+        # stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True
     )
@@ -21,6 +21,14 @@ def startProcesses(logFile):
 def logMessage(process, action, message=''):
     process.stdin.write(f'{action} {message}\n')
     process.stdin.flush()
+
+def processEncryption(text):
+    log = text.split(maxsplit=1)
+    action = log[0]
+    message = ''
+    if len(log) > 1:
+        message = log[1]
+    return action, message
 
 def menu():
     print('\n***************')
@@ -43,9 +51,9 @@ def password(logger, encryption, passwords):
         if command == '1' or command == 'NEW' or command == 'NEW PASSWORD':
             logMessage(logger, 'INPUT', 'NEW PASSWORD')
             word = input('NEW PASSWORD: ')
-            print('point1')
+            #print('point1')
             passwords.append(word)
-            print(passwords)
+            #print(passwords)
             break
         elif command == '2' or command == 'HISTORY':
             logMessage(logger, 'INPUT', 'HISTORY')
@@ -67,9 +75,20 @@ def password(logger, encryption, passwords):
         else:
             print('Please submit a valid input.\n')
     
-    encryption.stdin.write(f'PASSKEY {word}\n')
+    encryption.stdin.write(f'PASSKEY {word}')
     encryption.stdin.flush()
     logMessage(logger, 'PASSKEY', word)
+    result, message = '', ''
+    while result == '':
+        print('driver test')
+        temp = encryption.stdout.readline().rstrip()
+        print('encryption result recieved driver')
+        result, message = processEncryption(temp)
+    logMessage(logger, result, message)
+    if result == 'ERROR ':
+        print('Error setting password')
+    else:
+        print('Password set successfully')
     
 
 # def encrypt():

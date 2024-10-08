@@ -10,6 +10,6 @@ while mode != "halt":
         print(memloc)
         sys.stdout.flush()
     elif mode == "write":
-        memloc = int(sys.stdin.readline().rstrip())
+        memloc = int(input().rstrip())
     mode = input().strip()
     # mode = sys.stdin.readline().rstrip()
