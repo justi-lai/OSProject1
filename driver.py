@@ -39,7 +39,7 @@ def menu():
     print('4. HISTORY')
     print('5. QUIT')
 
-def password(logger, encryption, passwords):
+def password(logger, encryption, history):
     logMessage(logger, 'INPUT', 'PASSWORD')
 
     word = ''
@@ -52,25 +52,35 @@ def password(logger, encryption, passwords):
         if command == '1' or command == 'NEW' or command == 'NEW PASSWORD':
             logMessage(logger, 'INPUT', 'NEW PASSWORD')
             word = input('NEW PASSWORD: ')
-            passwords.append(word)
+            history.append(word)
             break
+
         elif command == '2' or command == 'HISTORY':
             logMessage(logger, 'INPUT', 'HISTORY')
-            if len(passwords) == 0:
+            if len(history) == 0:
                 print('No available passwords.')
+                logMessage(logger, 'ERROR', 'Empty history')
                 return
             print('Choose a password:')
-            for i in range(1, len(passwords)+1):
-                print(f'{i}. {passwords[i-1]}')
+            for i in range(1, len(history)+1):
+                print(f'{i}. {history[i-1]}')
+            print(f'{len(history) + 1}. GO BACK')
             command = input('INPUT: ').rstrip()
-            try:
-                word = passwords[int(command)-1]
-                break
-            except:
-                print('Please input a valid number.')
+            logMessage(logger, 'INPUT', command)
+            if command != str(len(history) + 1) and command != 'GO BACK':
+                try:
+                    word = history[int(command)-1]
+                    break
+                except:
+                    print('Please input a valid number.')
+                    logMessage(logger, 'ERROR', 'Invalid input')
+            else:
+                logMessage(logger, 'INPUT', 'GO BACK')
+
         elif command == '3' or command == 'BACK':
             logMessage(logger, 'INPUT', 'BACK')
             return
+
         else:
             print('Please submit a valid input.\n')
             logMessage(logger, 'ERROR', 'Invalid input')
@@ -84,8 +94,10 @@ def password(logger, encryption, passwords):
         print('Error setting password')
     else:
         print('Password set successfully')
+        if history.count(word) == 0:
+            history.append(word)
     
-def encrypt(logger, encryption, history, encrypted):
+def encrypt(logger, encryption, history):
     logMessage(logger, 'INPUT', 'ENCRYPT')
 
     word = ''
@@ -105,16 +117,27 @@ def encrypt(logger, encryption, history, encrypted):
             logMessage(logger, 'INPUT', 'HISTORY')
             if len(history) == 0:
                 print('No available strings.')
+                logMessage(logger, 'ERROR', 'Empty history')
                 return
             print('Choose a string:')
             for i in range(1, len(history)+1):
                 print(f'{i}. {history[i-1]}')
+            print(f'{len(history) + 1}. GO BACK')
             command = input('INPUT: ').rstrip()
-            try:
-                word = history[int(command)-1]
-                break
-            except:
-                print('Please input a valid number.')
+            logMessage(logger, 'INPUT', command)
+            if command != str(len(history) + 1) and command != 'GO BACK':
+                try:
+                    word = history[int(command)-1]
+                    break
+                except:
+                    print('Please input a valid number.')
+                    logMessage(logger, 'ERROR', 'Invalid input')
+            else:
+                logMessage(logger, 'INPUT', 'GO BACK')
+
+        elif command == '3' or command == 'BACK':
+            logMessage(logger, 'INPUT', 'BACK')
+            return
         
         else:
             print('Please submit a valid input.\n')
@@ -125,48 +148,110 @@ def encrypt(logger, encryption, history, encrypted):
     logMessage(logger, 'ENCRYPT', word)
     result, message = processEncryption(encryption.stdout.readline().rstrip())
     logMessage(logger, result, message)
-    encrypted.append(message)
     if result == 'ERROR ':
         print(message)
     else:
         print(f'{result}: {message}')
+        if history.count(message) == 0:
+            history.append(message)
 
 
-# def decrypt():
+def decrypt(logger, encryption, history):
+    logMessage(logger, 'INPUT', 'DECRYPT')
+
+    word = ''
+    while True:
+        print('\nDECRYPT')
+        print('1. NEW STRING')
+        print('2. HISTORY')
+        print('3. BACK')
+        command = input('INPUT: ').rstrip().upper()
+        if command == '1' or command == 'NEW' or command == 'NEW STRING':
+            logMessage(logger, 'INPUT', 'NEW STRING')
+            word = input('NEW STRING: ')
+            history.append(word)
+            break
+
+        elif command == '2' or command == 'HISTORY':
+            logMessage(logger, 'INPUT', 'HISTORY')
+            if len(history) == 0:
+                print('No available strings.')
+                logMessage(logger, 'ERROR', 'Empty history')
+                return
+            print('Choose a string:')
+            for i in range(1, len(history)+1):
+                print(f'{i}. {history[i-1]}')
+            print(f'{len(history) + 1}. GO BACK')
+            command = input('INPUT: ').rstrip()
+            logMessage(logger, 'INPUT', command)
+            if command != str(len(history) + 1) and command != 'GO BACK':
+                try:
+                    word = history[int(command)-1]
+                    break
+                except:
+                    print('Please input a valid number.')
+                    logMessage(logger, 'ERROR', 'Invalid input')
+            else:
+                logMessage(logger, 'INPUT', 'GO BACK')
+        
+        elif command == '3' or command == 'BACK':
+            logMessage(logger, 'INPUT', 'BACK')
+            return
+        
+        else:
+            print('Please submit a valid input.\n')
+            logMessage(logger, 'ERROR', 'Invalid input')
+
+    encryption.stdin.write(f'DECRYPT {word}\n')
+    encryption.stdin.flush()
+    logMessage(logger, 'DECRYPT', word)
+    result, message = processEncryption(encryption.stdout.readline().rstrip())
+    logMessage(logger, result, message)
+    if result == 'ERROR ':
+        print(message)
+    else:
+        print(f'{result}: {message}')
+        if history.count(message) == 0:
+            history.append(message)
 
 
-# def history():
+def history(logger, history):
+    logMessage(logger, 'INPUT', 'HISTORY')
+
+    if len(history) == 0:
+        print('No available strings.')
+        logMessage(logger, 'ERROR', 'Empty history')
+        return
+    for i in range(1, len(history)+1):
+        print(f'{i}. {history[i-1]}')
+    input('Enter any key to return...')
 
 
 def main(logFile):
     logger, encryption = startProcesses(logFile)
 
-    passwords = []
-    history = []
-    encrypted = []
+    history_list = []
 
     menu()
     command = input('INPUT: ').strip().upper()
     while command != '5' and command != 'QUIT':
         if command == '1' or command == 'PASSWORD':
-            password(logger, encryption, passwords)
+            password(logger, encryption, history_list)
         elif command == '2' or command == 'ENCRYPT':
-            encrypted.append(encrypt(logger, encryption, history, encrypted))
-        # elif command == '3' or command == 'DECRYPT':
-        #     decrypt()
-        # elif command == '4' or command == 'HISTORY':
-        #     history()
+            encrypt(logger, encryption, history_list)
+        elif command == '3' or command == 'DECRYPT':
+            decrypt(logger, encryption, history_list)
+        elif command == '4' or command == 'HISTORY':
+            history(logger, history_list)
         else:
             print('ERROR: Unknown input. Please try again.')
         menu()
         command = input('INPUT: ').strip().upper()
     
     logMessage(logger, 'QUIT')
-    
 
 
 if __name__ == '__main__':
-    #print('running')
     if len(sys.argv) != 2:
         print("Usage: python3 driver.py <log_file>")
         sys.exit(1)
