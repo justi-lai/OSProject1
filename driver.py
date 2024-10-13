@@ -7,14 +7,14 @@ def startProcesses(logFile):
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True
+        encoding='utf8'
     )
     encryptionProcess = subprocess.Popen(
         ['py', './encryption.py'],
         stdin=subprocess.PIPE,
-        # stdout=subprocess.PIPE,
+        stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True
+        encoding='utf8'
     )
     return loggerProcess, encryptionProcess
 
@@ -40,20 +40,19 @@ def menu():
     print('5. QUIT')
 
 def password(logger, encryption, passwords):
-    print('\nPASSWORD')
-    print('1. NEW PASSWORD')
-    print('2. HISTORY')
-    print('3. BACK')
+    logMessage(logger, 'INPUT', 'PASSWORD')
 
     word = ''
     while True:
+        print('\nPASSWORD')
+        print('1. NEW PASSWORD')
+        print('2. HISTORY')
+        print('3. BACK')
         command = input('INPUT: ').rstrip().upper()
         if command == '1' or command == 'NEW' or command == 'NEW PASSWORD':
             logMessage(logger, 'INPUT', 'NEW PASSWORD')
             word = input('NEW PASSWORD: ')
-            #print('point1')
             passwords.append(word)
-            #print(passwords)
             break
         elif command == '2' or command == 'HISTORY':
             logMessage(logger, 'INPUT', 'HISTORY')
@@ -68,30 +67,69 @@ def password(logger, encryption, passwords):
                 word = passwords[int(command)-1]
                 break
             except:
-                print('Please input a valid number.\n')
+                print('Please input a valid number.')
         elif command == '3' or command == 'BACK':
             logMessage(logger, 'INPUT', 'BACK')
             return
         else:
             print('Please submit a valid input.\n')
+            logMessage(logger, 'ERROR', 'Invalid input')
     
-    encryption.stdin.write(f'PASSKEY {word}')
+    encryption.stdin.write(f'PASSKEY {word}\n')
     encryption.stdin.flush()
     logMessage(logger, 'PASSKEY', word)
-    result, message = '', ''
-    while result == '':
-        print('driver test')
-        temp = encryption.stdout.readline().rstrip()
-        print('encryption result recieved driver')
-        result, message = processEncryption(temp)
+    result, message = processEncryption(encryption.stdout.readline().rstrip())
     logMessage(logger, result, message)
     if result == 'ERROR ':
         print('Error setting password')
     else:
         print('Password set successfully')
     
+def encrypt(logger, encryption, history, encrypted):
+    logMessage(logger, 'INPUT', 'ENCRYPT')
 
-# def encrypt():
+    word = ''
+    while True:
+        print('\nENCRYPT')
+        print('1. NEW STRING')
+        print('2. HISTORY')
+        print('3. BACK')
+        command = input('INPUT: ').rstrip().upper()
+        if command == '1' or command == 'NEW' or command == 'NEW STRING':
+            logMessage(logger, 'INPUT', 'NEW STRING')
+            word = input('NEW STRING: ')
+            history.append(word)
+            break
+
+        elif command == '2' or command == 'HISTORY':
+            logMessage(logger, 'INPUT', 'HISTORY')
+            if len(history) == 0:
+                print('No available strings.')
+                return
+            print('Choose a string:')
+            for i in range(1, len(history)+1):
+                print(f'{i}. {history[i-1]}')
+            command = input('INPUT: ').rstrip()
+            try:
+                word = history[int(command)-1]
+                break
+            except:
+                print('Please input a valid number.')
+        
+        else:
+            print('Please submit a valid input.\n')
+            logMessage(logger, 'ERROR', 'Invalid input')
+
+    encryption.stdin.write(f'ENCRYPT {word}\n')
+    encryption.stdin.flush()
+    logMessage(logger, 'ENCRYPT', word)
+    result, message = processEncryption(encryption.stdout.readline().rstrip())
+    logMessage(logger, result, message)
+    encrypted.append(message)
+    if result == 'ERROR ':
+        print(message)
+    else:
+        print(f'{result}: {message}')
 
 
 # def decrypt():
@@ -103,23 +141,17 @@ def password(logger, encryption, passwords):
 def main(logFile):
     logger, encryption = startProcesses(logFile)
 
-   # print(encryption.pid)
-
-    # encryption.stdin.write('this is a test')
-    # encryption.stdin.flush()
-    #print(encryption.stdout.readline())
-
-
     passwords = []
+    history = []
+    encrypted = []
 
     menu()
     command = input('INPUT: ').strip().upper()
     while command != '5' and command != 'QUIT':
         if command == '1' or command == 'PASSWORD':
-            logMessage(logger, 'INPUT', 'PASSWORD')
             password(logger, encryption, passwords)
-        # elif command == '2' or command == 'ENCRYPT':
-        #     encrypt()
+        elif command == '2' or command == 'ENCRYPT':
+            encrypted.append(encrypt(logger, encryption, history, encrypted))
         # elif command == '3' or command == 'DECRYPT':
         #     decrypt()
         # elif command == '4' or command == 'HISTORY':

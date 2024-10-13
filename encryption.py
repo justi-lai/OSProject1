@@ -20,7 +20,7 @@ def main():
 
         if action == 'PASSKEY':
             passkey = message.upper()
-            output()
+            output('RESULT', '')
         
         elif action == 'ENCRYPT':
             if passkey == '':
@@ -84,6 +84,4 @@ if __name__ == '__main__':
     if len(sys.argv) != 1:
         print('ERROR: incorrect usage of encryption')
         sys.exit(1)
-    print('encryption running')
-    #print(sys.stdin.readline())
     main()
